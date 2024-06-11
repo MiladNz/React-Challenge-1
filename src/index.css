@@ -1,0 +1,9 @@
+@import url("./fonts.css");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Vazir";
+  background-color: #f1f5f9;
+}
