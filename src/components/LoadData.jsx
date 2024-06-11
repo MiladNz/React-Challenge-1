@@ -126,11 +126,11 @@ function DisplayData({ projects, sortBy, status, filter }) {
   let filteredProjectsByCategory;
   if (filter === "web development") {
     filteredProjectsByCategory = [...filteredProjectsByStatus].filter(
-      (item) => item.englishTitle === "web development"
+      (item) => item.category.englishTitle === "web development"
     );
   } else if (filter === "design-ui/ux") {
     filteredProjectsByCategory = [...filteredProjectsByStatus].filter(
-      (item) => item.englishTitle === "design-ui/ux"
+      (item) => item.category.englishTitle === "design-ui/ux"
     );
   } else {
     filteredProjectsByCategory = filteredProjectsByStatus;
