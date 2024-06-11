@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { Cog8ToothIcon } from "@heroicons/react/24/outline";
 
 function LoadData({ projects }) {
   const [sortBy, setSortBy] = useState("default");
   const [status, setStatus] = useState("all");
+  const [filter, setFilter] = useState("all");
 
   return (
     <div className="container w-full m-auto">
@@ -15,10 +17,19 @@ function LoadData({ projects }) {
             projects={projects}
             onSort={(e) => setSortBy(e.target.value)}
           />
-          <SortProjectsByCategory />
+          <FilterProjectsByCategory
+            filter={filter}
+            setFilter={setFilter}
+            onFilter={(e) => setFilter(e.target.value)}
+          />
         </div>
       </div>
-      <DisplayData projects={projects} sortBy={sortBy} />
+      <DisplayData
+        projects={projects}
+        sortBy={sortBy}
+        status={status}
+        filter={filter}
+      />
     </div>
   );
 }
@@ -76,31 +87,71 @@ function SortProjectsByDate({ sortBy, onSort }) {
   );
 }
 
-function SortProjectsByCategory() {
+function FilterProjectsByCategory({ filter, setFilter, onFilter }) {
   return (
-    <select className="bg-white py-1 px-2 border-none rounded-md selection:border-none text-sm">
-      <option value="all">دسته بندی (همه)</option>
-      <option value="web">برنامه نویسی وب</option>
-      <option value="uiux">طراحی UI/UX</option>
+    <select
+      value={filter}
+      onChange={onFilter}
+      className="bg-white py-1 px-2 border-none rounded-md selection:border-none text-sm">
+      <option value="all" onClick={() => setFilter("all")}>
+        دسته بندی (همه)
+      </option>
+      <option
+        value="web development"
+        onClick={() => setFilter("web development")}>
+        برنامه نویسی وب
+      </option>
+      <option value="design-ui/ux" onClick={() => setFilter("design-ui/ux")}>
+        طراحی UI/UX
+      </option>
     </select>
   );
 }
-function DisplayData({ projects, sortBy }) {
-  let sortedProjects = projects;
 
-  if (sortBy === "latest")
-    sortedProjects = [...projects].sort(
+function DisplayData({ projects, sortBy, status, filter }) {
+  //filter by status
+  let filteredProjectsByStatus;
+  if (status === "OPEN") {
+    filteredProjectsByStatus = [...projects].filter(
+      (item) => item.status === "OPEN"
+    );
+  } else if (status === "CLOSED") {
+    filteredProjectsByStatus = [...projects].filter(
+      (item) => item.status === "CLOSED"
+    );
+  } else {
+    filteredProjectsByStatus = projects;
+  }
+  // filter by category
+  let filteredProjectsByCategory;
+  if (filter === "web development") {
+    filteredProjectsByCategory = [...filteredProjectsByStatus].filter(
+      (item) => item.englishTitle === "web development"
+    );
+  } else if (filter === "design-ui/ux") {
+    filteredProjectsByCategory = [...filteredProjectsByStatus].filter(
+      (item) => item.englishTitle === "design-ui/ux"
+    );
+  } else {
+    filteredProjectsByCategory = filteredProjectsByStatus;
+  }
+  // sort projects
+  let sortedProjects;
+  if (sortBy === "latest") {
+    sortedProjects = [...filteredProjectsByCategory].sort(
       (a, b) => new Date(b.deadline) - new Date(a.deadline)
     );
-  if (sortBy === "earliest")
-    sortedProjects = [...projects].sort(
+  } else if (sortBy === "earliest") {
+    sortedProjects = [...filteredProjectsByCategory].sort(
       (a, b) => new Date(a.deadline) - new Date(b.deadline)
     );
-  if (sortBy === "default") sortedProjects = projects;
+  } else if (sortBy === "default") {
+    sortedProjects = filteredProjectsByCategory;
+  }
 
   return (
-    <div className="flex flex-col ">
-      <table className="border-collapse">
+    <div className="flex flex-col">
+      <table className="border-collapse shadow-md">
         <thead className="text-slate-800">
           <tr className="border-b-2">
             <th className="p-1">#</th>
@@ -112,21 +163,29 @@ function DisplayData({ projects, sortBy }) {
           </tr>
         </thead>
         <tbody>
-          {sortedProjects.map((pr, index) => {
-            // console.log(sortedProjects);
-            <tr className="border-b-2" key={pr._id}>
-              <td className="bg-white p-2">{index + 1}</td>
-              <td className="bg-white p-2">{pr.title}</td>
-              <td className="bg-white p-2">{pr.budget}</td>
-              <td className="bg-white p-2">
+          {sortedProjects.map((pr, index) => (
+            <tr className="border-b-2 gap-2 " key={pr._id}>
+              <td className="bg-white p-2  ">{index + 1}</td>
+              <td className="bg-white p-2 font-semibold ">{pr.title}</td>
+              <td className="bg-white p-2  ">
+                {pr.budget} {"تومان"}
+              </td>
+              <td className="bg-white p-2 ">
                 {new Date(pr.deadline).toLocaleDateString("fa")}
               </td>
-              <td className="bg-white p-2">
+              <td
+                className={`px-0.5 py-1 h-3 w-3 rounded-md font-medium  ${
+                  pr.status === "OPEN"
+                    ? "bg-btn_color text-white"
+                    : "bg-slate-400 text-white"
+                }`}>
                 {pr.status === "OPEN" ? "باز" : "بسته"}
               </td>
-              <td className="bg-white p-2"></td>
-            </tr>;
-          })}
+              <td className="bg-white p-2 ">
+                <Cog8ToothIcon className="w-6 h-6 text-btn_color bg-white flex justify-center mx-auto cursor-pointer " />
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

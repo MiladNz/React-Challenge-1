@@ -14,7 +14,7 @@ const projects = [
       title: "طراحی UI/UX",
       englishTitle: "design-ui/ux",
     },
-    budget: "۱۵۰,۰۰۰,۰۰۰",
+    budget: "۱۴۸,۰۰۰,۰۰۰",
     tags: ["Ui/UX", "Figma"],
     deadline: "2023-12-23T12:55:48.740Z",
     createdAt: "2023-10-23T18:18:55.636Z",
@@ -38,31 +38,47 @@ const projects = [
   },
   {
     _id: 3,
-    title: "توسعه سایت وردپرس",
-    description: " طراحی و توسعه یک سایت وردپرسی",
+    title: "توسعه سایت سازمانی",
+    description: " توسعه یک سایت سازمانی",
     status: "OPEN",
     category: {
-      id: 3,
-      title: "طراحی UI/UX",
-      englishTitle: "design-ui/ux",
+      id: 2,
+      title: "برنامه نویسی وب",
+      englishTitle: "web development",
     },
-    budget: "۱۰,۰۰۰,۰۰۰",
-    tags: ["Ui/UX", "Figma"],
+    budget: "۶۳,۰۰۰,۰۰۰",
+    tags: ["React", "Nodejs", "online shop"],
     deadline: "2023-10-23T12:55:48.740Z",
     createdAt: "2022-08-23T18:18:55.636Z",
     updatedAt: "2024-07-02T13:37:48.468Z",
+  },
+  {
+    _id: 4,
+    title: "طراحی اپلیکیشن موبایل",
+    description: " طراحی اپلیکیشن موبایل",
+    status: "CLOSED",
+    category: {
+      id: 1,
+      title: "طراحی UI/UX",
+      englishTitle: "design-ui/ux",
+    },
+    budget: "۴۷,۰۰۰,۰۰۰",
+    tags: ["Ui/UX", "Figma"],
+    deadline: "2021-10-23T12:55:48.740Z",
+    createdAt: "2022-04-23T18:18:55.636Z",
+    updatedAt: "2024-09-02T13:37:48.468Z",
   },
   //  خودتون میتونید دیتاهای دیگه رو اضافه کنید.
 ];
 
 function App() {
-  const [showBtn, setShowBtn] = useState(true);
+  const [showData, setShowData] = useState(false);
   return (
     <div className="container mx-auto w-full max-w-screen-lg ">
-      {showBtn ? (
-        <Button setShowBtn={setShowBtn} />
-      ) : (
+      {showData ? (
         <LoadData projects={projects} />
+      ) : (
+        <Button setShowData={setShowData} />
       )}
     </div>
   );
